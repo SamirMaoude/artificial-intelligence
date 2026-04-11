@@ -49,7 +49,18 @@ A partir de bases de donnees de 10 000 configurations du monde des blocs generee
 
 L'algorithme **Apriori** extrait les itemsets frequents (frequence min. 2/3) puis les regles d'association (confiance min. 95/100). Resultat : **83 motifs** et **168 regles** extraits sur des mondes de 10 blocs et 3 piles.
 
-### 5. Blocks World (`blocksworld/`)
+### 5. Planification PDDL (`pddl/`)
+Modelisation du monde des blocs en **PDDL** (Planning Domain Definition Language), le langage standard de description de domaines de planification :
+- **Domaine** (`blocksworld.pddl`) : definition des types (`block`, `table`), des predicats (`on-block`, `on-table`, `fixed`, `free`) et des quatre actions possibles :
+  - `move-block-to-block` : deplacer un bloc du dessus d'un bloc vers un autre bloc
+  - `move-block-to-table` : deplacer un bloc du dessus d'un bloc vers une table vide
+  - `move-from-table-to-block` : deplacer un bloc d'une table vers le dessus d'un bloc
+  - `move-from-table-to-table` : deplacer un bloc d'une table vers une autre table vide
+- **Probleme** (`problem.pddl`) : instance concrete avec 12 blocs (B0-B11) et 4 tables (T1-T4), definissant un etat initial et un etat but a atteindre
+
+Cette modelisation permet d'utiliser des planificateurs PDDL externes via [pddl4j](https://github.com/pellierd/pddl4j) pour resoudre automatiquement des instances du monde des blocs.
+
+### 6. Blocks World (`blocksworld/`)
 Application et integration des modules precedents au monde des blocs :
 - Generation de configurations avec contraintes regulieres et croissantes
 - Heuristiques dediees pour la planification
@@ -65,6 +76,7 @@ Application et integration des modules precedents au monde des blocs :
 - Fichiers JAR externes (a placer dans un dossier `lib/`) :
   - `blocksworld.jar`
   - `bwgenerator.jar`
+  - `pddl4j-4.0.0.jar`
 
 ## Compilation
 
@@ -89,6 +101,7 @@ Toutes les commandes s'executent depuis la racine du projet.
 | Solveur monde croissant | `java -cp build:lib/blocksworld.jar:lib/bwgenerator.jar blocksworld.demos.IncreasingWorldSolverDemo` |
 | Solveur regulier + croissant | `java -cp build:lib/blocksworld.jar:lib/bwgenerator.jar blocksworld.demos.IncreasingAndRegularWorldSolverDemo` |
 | Data mining sur Blocks World | `java -cp build:lib/blocksworld.jar:lib/bwgenerator.jar blocksworld.datamining.BwDataminingDemo` |
+| Planification PDDL (HSP) | `java -cp lib/pddl4j-4.0.0.jar fr.uga.pddl4j.planners.statespace.HSP pddl/blocksworld.pddl pddl/problem.pddl` |
 
 ---
 
@@ -101,6 +114,7 @@ modelling/          Contraintes & variables
 cp/                 Solveurs CSP
 planning/           Algorithmes de recherche
 datamining/         Apriori & regles d'association
+pddl/               Modelisation PDDL du domaine
     |
     v
 blocksworld/        Application au monde des blocs
